@@ -7,6 +7,8 @@
 - [Course instruction](https://github.com/webprogramming260)
 - [Canvas](https://byu.instructure.com)
 - [MDN](https://developer.mozilla.org)
+## Initial Setup
+I think using git will become very helpful, but defintiely does not feel initially very intuitive
 
 ## AWS
 
