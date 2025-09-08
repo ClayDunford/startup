@@ -1,8 +1,21 @@
-# Your startup name here
+# Succulent Survivor
 
 [My Notes](notes.md)
 
 A brief description of the application here. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+### Idea 1: Succulents
+Succulent window that grows at a realistic speed. Tracks weather based on your location. Maybe uses google maps to create a realistic window scene? (likely needs more functionality) It would be cool to combine it with a productivity system ala forest? Maybe connect it with the atomic habits system?
+
+if atomic habits, once a habit reaches "maturity" you can "propogate it" by stacking another habit on top of it. 
+
+Multiple people can do it together to form accountability? "Hey it looks like such and such person's plant is wilting, send them a message to encourage them"
+
+### Idea 2: Class flow visualizer
+Creates a my map class planner, but that shows dependencies based on the pre-reqs. Clearly and simply visualizes the flow, and has a simple visual editor. 
+
+### Idea 3: C is for Cookie
+Illustrates how many cookies are currently tracking you in a fun visual way. Maybe a score based on how many cookies you have? (Raw (less) to burnt (tons)
 
 
 > [!NOTE]
