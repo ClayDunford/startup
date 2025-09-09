@@ -18,11 +18,11 @@ A tool to show the dependencies between various classes when planning multiple s
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] Proper use of Markdown
-- [ ] A concise and compelling elevator pitch
-- [ ] Description of key features
-- [ ] Description of how you will use each technology
-- [ ] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
+- [x] Proper use of Markdown
+- [x] A concise and compelling elevator pitch
+- [x] Description of key features
+- [x] Description of how you will use each technology
+- [x] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
 ### Elevator pitch
 
@@ -30,9 +30,9 @@ Mymap is a great tool for planning classes, but often falls short when you try t
 
 ### Design
 
-<img width="568" height="452" alt="Screenshot 2025-09-09 at 9 37 47 AM" src="https://github.com/user-attachments/assets/bede04f6-cff2-4ad8-a2aa-138ddce45283" />
+<img width="568" height="452" alt="Design Image" src="https://github.com/user-attachments/assets/bede04f6-cff2-4ad8-a2aa-138ddce45283" />
 
-Simple minimalist design. Centered primarily on displaying the class visualization and letting the user move various classes (here represented by rectangle with rounded corners) around. Each class will be clickable and display information about the class below the editor, as well as highlighting the various classes that connect with this one. The actual classplan itself will be stored in a simple custom data structure, akin to a double linked list.
+Simple minimalist design. Centered primarily on displaying the class visualization and letting the user move various classes (here represented by rectangle with rounded corners) around. Each class will be clickable and display information about the class below the editor, as well as highlighting the various classes that connect with this one. The actual classplan itself will be stored in a simple custom data structure, akin to a double linked list. The webapp will then read that data structure to know how to generate the visual of the class plan.
 
 ### Key features
 
@@ -47,9 +47,9 @@ I am going to use the required technologies in the following ways.
 - **HTML** - Used to build the structure and skeleton of the website
 - **CSS** - Add color and visuals to the site to make it easier to navigate
 - **React** - Used to create the visual editor to modify the class structure.
-- **Service** - Description here
-- **DB/Login** - Description here
-- **WebSocket** - Description here
+- **Service** - Saves the user's class plans so they can access it at later times. If it isn't too complex, using web services to access the BYU course catalog to dynamically generate the class connections
+- **DB/Login** - Each user creates a login to save their plan, which is stored in a database server.
+- **WebSocket** - Used to autosave each change the user makes to their plan without having to do anything manually.
 
 ## 🚀 AWS deliverable
 
