@@ -49,7 +49,7 @@ I am going to use the required technologies in the following ways.
 - **React** - Used to create the visual editor to modify the class structure.
 - **Service** - Saves the user's class plans so they can access it at later times. If it isn't too complex, using web services to access the BYU course catalog to dynamically generate the class connections
 - **DB/Login** - Each user creates a login to save their plan, which is stored in a database server.
-- **WebSocket** - Used to autosave each change the user makes to their plan without having to do anything manually.
+- **WebSocket** - Used to autosave each change the user makes to their plan without having to do anything manually. Automatically highlights when the user has made a change that invalidates their course plan.
 
 ## 🚀 AWS deliverable
 
