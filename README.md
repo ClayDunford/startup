@@ -30,30 +30,23 @@ Mymap is a great tool for planning classes, but often falls short when you try t
 
 ### Design
 
-![Design image](placeholder.png)
+<img width="568" height="452" alt="Screenshot 2025-09-09 at 9 37 47 AM" src="https://github.com/user-attachments/assets/bede04f6-cff2-4ad8-a2aa-138ddce45283" />
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-```mermaid
-sequenceDiagram
-    actor You
-    actor Website
-    You->>Website: Replace this with your design
-```
+Simple minimalist design. Centered primarily on displaying the class visualization and letting the user move various classes (here represented by rectangle with rounded corners) around. Each class will be clickable and display information about the class below the editor, as well as highlighting the various classes that connect with this one. The actual classplan itself will be stored in a simple custom data structure, akin to a double linked list.
 
 ### Key features
 
-- Describe your key feature
-- Describe your key feature
-- Describe your key feature
+- Visual editor to illustrate the connections between classes like a flowchart
+- Login feature so users can save their current plans and make new ones
+- Export button that lets the user export the currently displayed plan and save it to their computer
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Description here
-- **CSS** - Description here
-- **React** - Description here
+- **HTML** - Used to build the structure and skeleton of the website
+- **CSS** - Add color and visuals to the site to make it easier to navigate
+- **React** - Used to create the visual editor to modify the class structure.
 - **Service** - Description here
 - **DB/Login** - Description here
 - **WebSocket** - Description here
