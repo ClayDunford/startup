@@ -27,9 +27,9 @@ Creates a my map class planner, but that shows dependencies based on the pre-req
 Illustrates how many cookies are currently tracking you in a fun visual way. Maybe a score based on how many cookies you have? (Raw (less) to burnt (tons)
 
 ## AWS
-
+Public IP Address: 54.167.138.102
 ## Caddy
-
+Seems pretty simple. Nano was much easier to use than VIM
 ## HTML
 
 ## CSS
