@@ -1,6 +1,6 @@
 # CS 260 Notes
 
-[My startup - Simon](https://simon.cs260.click)
+[My startup - ClassConnections](https://claydunford.com)
 
 ## Helpful links
 
@@ -31,6 +31,7 @@ Public IP Address: 54.167.138.102
 ## Caddy
 Seems pretty simple. Nano was much easier to use than VIM
 ## HTML
+It seems like for deploying the code, I use the deploy feature and it basically uploads the file to the server, to update it.
 
 ## CSS
 
