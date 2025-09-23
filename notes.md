@@ -33,6 +33,8 @@ Seems pretty simple. Nano was much easier to use than VIM
 ## HTML
 It seems like for deploying the code, I use the deploy feature and it basically uploads the file to the server, to update it.
 
+Building sites in HTML is fairly simple, especially without CSS. It feels like it mainly about just throwing stuff on there, almost like a rough draft, and filling in that skeleton using css and later React.
+
 ## CSS
 
 ## React Part 1: Routing
