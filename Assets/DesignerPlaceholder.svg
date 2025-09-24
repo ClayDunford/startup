@@ -8,7 +8,10 @@
 
       .cls-2 {
         font-family: MyriadPro-Regular, 'Myriad Pro';
-        font-size: 12px;
+        font-size: 16px;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: .5px;
       }
 
       .cls-3 {
@@ -16,11 +19,11 @@
       }
 
       .cls-4 {
-        letter-spacing: -.01em;
+        letter-spacing: 0em;
       }
 
       .cls-5 {
-        letter-spacing: 0em;
+        letter-spacing: -.01em;
       }
 
       .cls-6 {
@@ -42,19 +45,11 @@
       .cls-10 {
         letter-spacing: 0em;
       }
-
-      .cls-11 {
-        letter-spacing: 0em;
-      }
-
-      .cls-12 {
-        letter-spacing: .01em;
-      }
     </style>
   </defs>
   <g>
-    <path class="cls-1" d="M17.09,10.74h301.82c6.54,0,11.86,5.31,11.86,11.86v183.21c0,6.54-5.31,11.86-11.86,11.86H17.09c-6.54,0-11.86-5.31-11.86-11.86V22.59c0-6.54,5.31-11.86,11.86-11.86Z"/>
-    <path d="M318.91,11.18c6.29,0,11.41,5.12,11.41,11.41v183.2c0,6.29-5.12,11.41-11.41,11.41H17.09c-6.29,0-11.41-5.12-11.41-11.41V22.59c0-6.29,5.12-11.41,11.41-11.41h301.82M318.91,10.29H17.09c-6.79,0-12.3,5.51-12.3,12.3v183.2c0,6.79,5.51,12.3,12.3,12.3h301.82c6.79,0,12.3-5.51,12.3-12.3V22.59c0-6.79-5.51-12.3-12.3-12.3h0Z"/>
+    <rect class="cls-1" x="19.93" y="49.62" width="298.65" height="180.76" rx="11.5" ry="11.5"/>
+    <path d="M307.08,50.12c6.07,0,11,4.93,11,11v157.76c0,6.07-4.93,11-11,11H31.43c-6.07,0-11-4.93-11-11V61.12c0-6.07,4.93-11,11-11h275.65M307.08,49.12H31.43c-6.6,0-12,5.4-12,12v157.76c0,6.6,5.4,12,12,12h275.65c6.6,0,12-5.4,12-12V61.12c0-6.6-5.4-12-12-12h0Z"/>
   </g>
-  <text class="cls-2" transform="translate(61.1 101.62)"><tspan class="cls-7" x="0" y="0">P</tspan><tspan x="6.32" y="0">la</tspan><tspan class="cls-6" x="14.94" y="0">c</tspan><tspan x="20.24" y="0">eholder </tspan><tspan class="cls-4" x="61.58" y="0">f</tspan><tspan x="64.93" y="0">or i</tspan><tspan class="cls-8" x="80.79" y="0">n</tspan><tspan class="cls-6" x="87.41" y="0">t</tspan><tspan x="91.31" y="0">e</tspan><tspan class="cls-7" x="97.32" y="0">r</tspan><tspan class="cls-3" x="101.18" y="0">a</tspan><tspan class="cls-12" x="106.97" y="0">c</tspan><tspan x="112.5" y="0">ti</tspan><tspan class="cls-10" x="119.28" y="0">v</tspan><tspan x="124.93" y="0">e </tspan><tspan class="cls-9" x="133.49" y="0">w</tspan><tspan x="142.2" y="0">eb applic</tspan><tspan class="cls-8" x="188.04" y="0">a</tspan><tspan x="193.77" y="0">tion</tspan><tspan x="53.63" y="14.4">Class desi</tspan><tspan class="cls-5" x="101.6" y="14.4">g</tspan><tspan x="108.23" y="14.4">ner/l</tspan><tspan class="cls-11" x="131.78" y="14.4">a</tspan><tspan class="cls-9" x="137.46" y="14.4">y</tspan><tspan x="143" y="14.4">out</tspan></text>
+  <text class="cls-2" transform="translate(116.01 120.57)"><tspan class="cls-7" x="0" y="0">P</tspan><tspan x="8.43" y="0">la</tspan><tspan class="cls-6" x="19.92" y="0">c</tspan><tspan class="cls-3" x="26.99" y="0">eholder </tspan><tspan class="cls-5" x="82.11" y="0">f</tspan><tspan x="86.58" y="0">or </tspan><tspan class="cls-10" x="-40.21" y="19.2">w</tspan><tspan class="cls-3" x="-28.6" y="19.2">ebsocket/</tspan><tspan class="cls-9" x="37.11" y="19.2">w</tspan><tspan class="cls-4" x="48.73" y="19.2">eb applic</tspan><tspan class="cls-8" x="109.85" y="19.2">a</tspan><tspan x="117.49" y="19.2">tion</tspan></text>
 </svg>

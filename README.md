@@ -63,15 +63,15 @@ Attached the custom domain named and configured the caddy file to use https!
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [ ] **Images** - I did not complete this part of the deliverable.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [x] **HTML pages** - Added the necessaary pages
+- [x] **Proper HTML element usage** - Used the components from HTML
+- [x] **Links** - Linked the pages to connect them
+- [x] **Text** - Added the basic text to help make it clear how to use the apps
+- [x] **3rd party API placeholder** - Added a placeholder for the 3rd party API
+- [x] **Images** - The placeholder images are in place
+- [x] **Login placeholder** - Created log in place holder
+- [x] **DB data placeholder** - Created a Database placeholder
+- [x] **WebSocket placeholder** - Created a Websocket placeholder
 
 ## 🚀 CSS deliverable
 
