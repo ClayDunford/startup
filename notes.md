@@ -36,7 +36,7 @@ It seems like for deploying the code, I use the deploy feature and it basically 
 Building sites in HTML is fairly simple, especially without CSS. It feels like it mainly about just throwing stuff on there, almost like a rough draft, and filling in that skeleton using css and later React.
 
 ## CSS
-
+Css is very finicky, so it's very very helpful to use bootstrap. It's nice how quicly you can iterate
 ## React Part 1: Routing
 
 
