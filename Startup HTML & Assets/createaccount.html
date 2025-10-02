@@ -31,23 +31,36 @@
                         <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                     </ul>
                     <div class="d-flex gap-2 mt-2 ms-auto flex-column flex-md-row align-items-end">
-                        <a href="login.html" class="btn btn-primary">Log in </a>
+                        <a href="login.html" class="btn btn-success">Log in </a>
                     </div>
                 </div>
             </div>
         </nav>
     </header>
     <main>
-        <h1> New User? Create an account:</h1>
-        <label for="Username">Username</label><br>
-        <input type="text" id="Username" name="Username"><br>
-        <label for="Password">Password</label><br>
-        <input type="text" id="Password" name="Password"><br>
-        <label for="ConfirmPassword">Confirm Password</label><br>
-        <input type="text" id="ConfirmPassword" name="ConfirmPassword"><br>
-        <a href="account.html"> <button type="button">Create Account</button> </a> <br>
-        <a href="login.html"> <button type="button">Already have an account? Click here to log in</button> </a>
-
+        <div class="text-light text-center" style="background-color:#006838 ;">
+            <h1> Create an Account:</h1>
+        </div>
+        <div class="card mx-auto bg-dark text-light" style="width: 30rem;">
+            <form class="px-4 py-3">
+                <div class="mb-3">
+                    <label for="Username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="Username" name="Username" placeholder="Username">
+                </div>
+                <div class="mb-3">
+                    <label for="Password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="Password" name="Password" placeholder="Password">
+                </div>
+                <div class="mb-3">
+                    <label for="Password" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="Password" name="Password" placeholder="Password">
+                </div>
+                <div class="d-grid gap-2">
+                    <a href="grow.html" class="btn btn-success">Create Account</a>
+                    <a href="login.html" class="btn btn-outline-success">Alreday have an account? Click here to log in!</a>
+                </div>
+            </form>
+        </div>
     </main>
     <footer class="bg-dark text-light text-center py-3 mt-auto">
         <ul class="navbar-nav d-flex flex-md-row flex-column mb-0 justify-content-center align-items-center">

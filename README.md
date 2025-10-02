@@ -77,12 +77,12 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Header, footer, and main content body** - I did not complete this part of the deliverable.
-- [ ] **Navigation elements** - I did not complete this part of the deliverable.
-- [ ] **Responsive to window resizing** - I did not complete this part of the deliverable.
-- [ ] **Application elements** - I did not complete this part of the deliverable.
-- [ ] **Application text content** - I did not complete this part of the deliverable.
-- [ ] **Application images** - I did not complete this part of the deliverable.
+- [x] **Header, footer, and main content body** - Used bootstrap to build this section
+- [x] **Navigation elements** - Followed the examples from the bootstrap code pen in the cs260 github
+- [x] **Responsive to window resizing** - Used flex to make windows resizable based on mobile vs web users
+- [x] **Application elements** - Implemented the basic css for applications
+- [x] **Application text content** -Filled in the necessary text content and stylized as needed
+- [x] **Application images** - Created a logo that accurately represents my web app
 
 ## 🚀 React part 1: Routing deliverable
 
