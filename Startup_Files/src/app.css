@@ -14,3 +14,9 @@
     font-size: 2vw;
     padding: .5em 1.5e;
 }
+
+.body {
+  display: flex;
+  flex-direction: column;
+  min-width: 375px;
+}
