@@ -17,10 +17,10 @@ export default function App() {
                 <header>
                     <nav className="navbar navbar-expand-md navbar-dark bg-dark">
                         <div className="container-fluid">
-                            <a className="navbar-brand" href="/">
+                            <NavLink className="navbar-brand" to="/">
                                 <img src="/SimpleSucculentLogo.svg" alt="Simply Succulents Logo" height="60" />
                                 Simply Succulents
-                            </a>
+                            </NavLink>
                             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarItems"
                                 aria-controls="navbarItems" aria-expanded="false" aria-label="Toggle navigation">
                                 <span className="navbar-toggler-icon"></span>
