@@ -38,7 +38,7 @@ Building sites in HTML is fairly simple, especially without CSS. It feels like i
 ## CSS
 Css is very finicky, so it's very very helpful to use bootstrap. It's nice how quicly you can iterate
 ## React Part 1: Routing
-
+React is all about paying very careful attention to the syntax changes between html, css, and jsx. As I implemented this, it made it a lot clearer how it all worked together.
 
 ## React Part 2: Reactivity
 
