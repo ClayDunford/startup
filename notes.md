@@ -187,4 +187,12 @@ placeOrder(order)
   .then(order => serveOrder(order))
   .catch(order => orderFailure(order));
 
+Many possibilities depending on promise behavior. Examples:
+1) Promise.resolve('Done').then(console.log) -> 'Done'
+2) Promise.reject('Error').catch(console.error) -> 'Error'
+3) new Promise(res => setTimeout(() => res('Hi'),1000)).then(console.log) -> 'Hi' after 1s
+4) Async function returns value -> printed when awaited or .then
+5) Promise chain: Promise.resolve(2).then(x=>x*2).then(x=>x+1).then(console.log) -> 5
+6) Reject handled -> shows error via catch.
+
 
