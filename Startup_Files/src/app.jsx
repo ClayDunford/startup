@@ -10,6 +10,10 @@ import { Homepage } from './homepage/homepage';
 import { Createaccount } from './createaccount/createaccount';
 import { Gallery } from './gallery/gallery';
 
+if (import.meta.env.MODE === 'development') {
+  localStorage.removeItem('succulentData'); // or localStorage.clear();
+}
+
 export default function App() {
     return (
         <BrowserRouter>

@@ -11,7 +11,7 @@ export default function Succulent({ size, potColor }) {
                 alignItems: 'center',
             }}
         >
-             <img src="/WindowTest.svg" alt="Succulent" width="200" />
+             <img src="/Succulentplant.svg" alt="Succulent" width="50" />
         <div
             style={{
                 width: '120px',

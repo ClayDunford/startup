@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../app.css';
 import Succulent from './succulent';
 import Controls from './controls';
 import {useGrowthSimulation} from './hooks/useGrowthSimulation';
+import { useWeather } from './hooks/useWeather';
+import { getWeatherBackground } from './utils/weatherBackground';
 
 export function Grow() {
   const [potColor, setPotColor] = useState('#a97c50');
@@ -12,8 +14,12 @@ export function Grow() {
 
   const {weather, error} = useWeather();
   const background = getWeatherBackground(weather?.weathercode);
+  
+  
   return (
-    <div className="d-flex flex-column bg-custom min-vh-100">
+    <div className="d-flex flex-column bg-custom min-vh-100"
+      style={{ background: background || '#006838', transition: 'background 1s ease'}}
+    >
       <main>
         <div className="text-light text-center" style={{ backgroundColor: '#006838'}} >
           <h1>Enjoy the growth!</h1>

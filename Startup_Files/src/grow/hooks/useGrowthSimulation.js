@@ -5,8 +5,11 @@ export function useGrowthSimulation({water, tickRate = 1000}) {
     const [size, setSize] = useState(1);
 
     useEffect (() => {
-        if (savedData) {
-            const {savedSize, savedWater, savedData} = savedData;
+        const savedDataRaw = localStorage.getItem('succulentData');
+        
+        if (savedDataRaw) {
+            const savedData = JSON.parse(savedDataRaw);
+            const {savedSize, savedWater, savedDate} = savedData;
 
             const now = new Date();
             const then = new Date(savedDate);
@@ -15,9 +18,8 @@ export function useGrowthSimulation({water, tickRate = 1000}) {
             let offlineSize = savedSize;
             for (let i = 0; i < hoursPassed; i++) {
                 offlineSize = calculateGrowth(offlineSize, savedWater);
-
-            setSize(offlineSize);
             }
+            setSize(offlineSize);
         }
     }, []);
 
