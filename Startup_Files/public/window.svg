@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 792 792">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: none;
+      }
+
+      .cls-2 {
+        stroke: #231f20;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-3 {
+        fill: #d1d3d4;
+      }
+
+      .cls-4 {
+        fill: #6d6f71;
+      }
+
+      .cls-5 {
+        fill: #939598;
+      }
+    </style>
+  </defs>
+  <rect class="cls-4" x="396" y="663.44" width="344.76" height="48.75"/>
+  <rect class="cls-5" x="396" y="646" width="369.8" height="17.44"/>
+  <polygon class="cls-3" points="691.18 88.56 680.25 99.94 680.25 632.51 691.18 641.61 691.18 88.56"/>
+  <line class="cls-2" x1="765.8" y1="83.79" x2="549.14" y2="83.79"/>
+  <line class="cls-2" x1="81.68" y1="88.56" x2="76.8" y2="83.79"/>
+  <polygon class="cls-3" points="765.8 83.79 746.67 99.94 396 99.94 396 83.79 765.8 83.79"/>
+  <polygon class="cls-3" points="765.8 646 396 646 396 632.51 745.86 632.51 765.8 646"/>
+  <rect class="cls-5" x="691.18" y="88.56" width="49.59" height="553.04"/>
+  <rect class="cls-5" x="396" y="42.06" width="369.8" height="41.73"/>
+  <rect class="cls-4" x="51.24" y="663.44" width="344.76" height="48.75"/>
+  <rect class="cls-5" x="26.2" y="646" width="369.8" height="17.44"/>
+  <polygon class="cls-3" points="100.82 88.56 111.75 99.94 111.75 632.51 100.82 641.61 100.82 88.56"/>
+  <line class="cls-2" x1="26.2" y1="83.79" x2="242.86" y2="83.79"/>
+  <polygon class="cls-3" points="26.2 83.79 45.33 99.94 396 99.94 396 83.79 26.2 83.79"/>
+  <polygon class="cls-3" points="26.2 646 396 646 396 632.51 46.14 632.51 26.2 646"/>
+  <rect class="cls-5" x="51.24" y="88.56" width="49.59" height="553.04" transform="translate(152.06 730.17) rotate(-180)"/>
+  <rect class="cls-5" x="26.2" y="42.06" width="369.8" height="41.73"/>
+  <rect class="cls-1" x="81.68" y="62.92" width="620.42" height="600.52"/>
+  <rect class="cls-5" x="111.75" y="346.82" width="568.5" height="36.15"/>
+  <rect class="cls-5" x="129.71" y="348.15" width="532.57" height="36.15" transform="translate(762.23 -29.77) rotate(90)"/>
+</svg>

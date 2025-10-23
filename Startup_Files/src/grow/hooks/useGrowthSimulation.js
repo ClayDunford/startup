@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import {calculateGrowth} from '../utils/growthModel';
 
-export function useGrowthSimulation({water, tickRate = 1000}) {
+export function useGrowthSimulation({water, potColor, tickRate = 1000}) {
     const [size, setSize] = useState(1);
 
     useEffect (() => {
@@ -33,6 +33,7 @@ export function useGrowthSimulation({water, tickRate = 1000}) {
                         savedSize: newSize,
                         savedWater: water,
                         savedDate: new Date().toISOString(),
+                        savedPotColor: potColor
                     })
                 );
                 return newSize;
@@ -40,6 +41,6 @@ export function useGrowthSimulation({water, tickRate = 1000}) {
         }, tickRate);
 
         return () => clearInterval(interval);
-    }, [water, tickRate]);
+    }, [water, tickRate, potColor]);
     return size;
 }
