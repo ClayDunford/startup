@@ -41,7 +41,7 @@ Css is very finicky, so it's very very helpful to use bootstrap. It's nice how q
 React is all about paying very careful attention to the syntax changes between html, css, and jsx. As I implemented this, it made it a lot clearer how it all worked together.
 
 ## React Part 2: Reactivity
-
+The more I build in react, the more clear it becomes how all these systems work together. React is very much about buildind simple functions that work together for a large overall purpose.
 
 
 ## Midterm Notes
