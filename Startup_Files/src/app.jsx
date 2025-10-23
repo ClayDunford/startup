@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './app.css';
@@ -15,6 +15,48 @@ if (import.meta.env.MODE === 'development') {
 }
 
 export default function App() {
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const stored = JSON.parse(localStorage.getItem('currentUser'));
+        if (stored) setUser(stored);
+    }, []);
+
+    useEffect(() => {
+        if (user) {
+            localStorage.setItem('currentUser', JSON.stringify(user));
+        } else {
+            localStorage.removeItem('currentUser');
+        }
+    }, [user]);
+
+    const handleLogin = (email, password) => {
+        const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+        const existing = accounts.find(acc => acc.email === email && acc.password === password);
+        if (existing) {
+            return true;
+        } else {
+            alert('Invalid email or password');
+            return false;
+        }
+    };
+
+    const handleCreateAccount = (email, password) => {
+        const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
+        if (accounts.some(acc => acc.email === email)) {
+            alert('Account already exists!')
+            return false;
+        }
+        const newAccount = {email, password};
+        localStorage.setItem('accounts', JSON.stringify([...accounts, newAccount]));
+        setUser(newAccount);
+        return true;
+    }
+
+    const handleLogout = () => {
+        setUser(null);
+    }
+    
     return (
         <BrowserRouter>
             <div className="body bg-dark text-light d-flex flex-column min-vh-100">
