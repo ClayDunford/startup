@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './app.css';
-import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, NavLink, Route, Routes, Navigate } from 'react-router-dom';
 import { Login } from './login/login';
 import { About } from './about/about';
 import { Grow } from './grow/grow';
@@ -58,6 +58,14 @@ export default function App() {
         setUser(null);
     }
 
+    function ProtectedRoute({user, children}) {
+        if(!user) {
+            alert("You must be logged in to access this page.");
+            return <Navigate to="/login" replace />;
+        }
+        return children;
+    }
+
     return (
         <BrowserRouter>
             <div className="body bg-dark text-light d-flex flex-column min-vh-100">
@@ -101,7 +109,7 @@ export default function App() {
                 </header>
                 <Routes>
                     <Route path='/' element={<Homepage />} />
-                    <Route path='/grow' element={<Grow />} />
+                    <Route path='/grow' element={<ProtectedRoute user={user}><Grow /></ProtectedRoute>} />
                     <Route path='/gallery' element={<Gallery />} />
                     <Route path='/about' element={<About />} />
                     <Route path='/login' element={<Login onLogin={handleLogin}/>} />
