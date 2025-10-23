@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './app.css';
@@ -11,7 +11,7 @@ import { Createaccount } from './createaccount/createaccount';
 import { Gallery } from './gallery/gallery';
 
 if (import.meta.env.MODE === 'development') {
-  localStorage.removeItem('succulentData'); // or localStorage.clear();
+    localStorage.removeItem('succulentData'); // or localStorage.clear();
 }
 
 export default function App() {
@@ -30,24 +30,25 @@ export default function App() {
         }
     }, [user]);
 
-    const handleLogin = (email, password) => {
+    const handleLogin = (username, password) => {
         const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-        const existing = accounts.find(acc => acc.email === email && acc.password === password);
+        const existing = accounts.find(acc => acc.username === username && acc.password === password);
         if (existing) {
+            setUser(existing);
             return true;
         } else {
-            alert('Invalid email or password');
+            alert('Invalid username or password');
             return false;
         }
     };
 
-    const handleCreateAccount = (email, password) => {
+    const handleCreateAccount = (username, password) => {
         const accounts = JSON.parse(localStorage.getItem('accounts')) || [];
-        if (accounts.some(acc => acc.email === email)) {
+        if (accounts.some(acc => acc.username === username)) {
             alert('Account already exists!')
             return false;
         }
-        const newAccount = {email, password};
+        const newAccount = { username, password };
         localStorage.setItem('accounts', JSON.stringify([...accounts, newAccount]));
         setUser(newAccount);
         return true;
@@ -56,7 +57,7 @@ export default function App() {
     const handleLogout = () => {
         setUser(null);
     }
-    
+
     return (
         <BrowserRouter>
             <div className="body bg-dark text-light d-flex flex-column min-vh-100">
@@ -80,20 +81,31 @@ export default function App() {
                                     <li className="nav-item"><NavLink className='nav-link' to='about'>About</NavLink></li>
                                 </ul>
                                 <div className="d-flex gap-2 mt-2 ms-auto flex-column flex-md-row align-items-end">
-                                    <NavLink to='login' className="btn btn-success">Log in</NavLink>
-                                    <NavLink to='createaccount' className="btn btn-outline-success">Create Account</NavLink>
+                                    {user ? (
+                                        <>
+                                            <span className="text-light me-2">Welcome, {user.username}!</span>
+                                            <button className="btn btn-outline-success" onClick={handleLogout}>Logout</button>
+
+                                        </>
+                                    ) : (
+                                        <>
+                                            <NavLink to='login' className="btn btn-success">Log in</NavLink>
+                                            <NavLink to='createaccount' className="btn btn-outline-success">Create Account</NavLink>
+                                        </>
+                                    )}
+
                                 </div>
                             </div>
                         </div>
                     </nav>
                 </header>
                 <Routes>
-                    <Route path='/' element = {<Homepage />} />
+                    <Route path='/' element={<Homepage />} />
                     <Route path='/grow' element={<Grow />} />
                     <Route path='/gallery' element={<Gallery />} />
                     <Route path='/about' element={<About />} />
-                    <Route path='/login' element={<Login />} />
-                    <Route path='/createaccount' element={<Createaccount />} />
+                    <Route path='/login' element={<Login onLogin={handleLogin}/>} />
+                    <Route path='/createaccount' element={<Createaccount onCreateAccount={handleCreateAccount}/>} />
                     <Route path='*' element={<NotFound />} />
                 </Routes>
                 <footer className="bg-dark text-light text-center py-3 mt-auto">
@@ -112,5 +124,5 @@ export default function App() {
 }
 
 function NotFound() {
-  return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
+    return <main className="container-fluid bg-secondary text-center">404: Return to sender. Address unknown.</main>;
 }
