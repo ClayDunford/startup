@@ -38,6 +38,8 @@ export default function Succulent({ size, potColor }) {
             <img src="/Succulentplant.svg"
                 alt="Succulent"
                 style={{ 
+                    width: '80',
+                    height: 'auto',
                     transform: `scale(${size})`,
                     transition: 'transform 1s ease', 
                     transformOrigin: 'bottom center',
