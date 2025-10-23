@@ -12,7 +12,7 @@ export function Gallery() {
 
     if (myData) {
       fakeSucculents.unshift({
-        username: 'You',
+        username: "John's",
         ...myData,
       });
     }

@@ -96,7 +96,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **All functionality implemented or mocked out** - Added the basic app functionality
+- [x] **All functionality implemented or mocked out** - Added the basic app functionality. Simulated the websocket in the gallery page
 - [x] **Hooks** - created simple hooks for running the background programs for the succulent simulation.
 
 ## 🚀 Service deliverable
