@@ -106,8 +106,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **Node.js/Express HTTP service** - Done!
 - [x] **Static middleware for frontend** - Applied the code from Simon
 - [x] **Calls to third party endpoints** - Weather API used to generate the background
-- [x] **Backend service endpoints** - login and logout used
-- [x] **Frontend calls service endpoints** - login and logout used
+- [x] **Backend service endpoints** - used for succulent objects
+- [x] **Frontend calls service endpoints** - used for succulent objects
 - [x] **Supports registration, login, logout, and restricted endpoint** - Done!
 
 
