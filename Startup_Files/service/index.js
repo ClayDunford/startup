@@ -9,7 +9,7 @@ const authCookieName = 'token';
 
 // The scores and users are saved in memory and disappear whenever the service is restarted.
 let users = [];
-let scores = [];
+let succulents = [];
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -112,6 +112,44 @@ const verifyAuth = async (req, res, next) => {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 };
+
+// Require authentication for succulent endpoints
+apiRouter.use('/succulents', verifyAuth);
+
+// Get all succulents for current user
+apiRouter.get('/succulents', async (req, res) => {
+  const user = await findUser('token', req.cookies[authCookieName]);
+  const userSucculents = succulents.filter(s => s.owner === user.username);
+  res.json(userSucculents);
+});
+
+// Create a new succulent
+apiRouter.post('/succulents', async (req, res) => {
+  const user = await findUser('token', req.cookies[authCookieName]);
+  const { size = 1, water = 6, potColor = '#a97c50' } = req.body;
+
+  const newSucculent = {
+    id: uuid.v4(),
+    owner: user.username,
+    size,
+    water,
+    potColor,
+    updatedAt: new Date().toISOString(),
+  };
+  succulents.push(newSucculent);
+  res.status(201).json(newSucculent);
+});
+
+// Update succulent by ID
+apiRouter.put('/succulents/:id', async (req, res) => {
+  const user = await findUser('token', req.cookies[authCookieName]);
+  const succulent = succulents.find(s => s.id === req.params.id && s.owner === user.username);
+  if (!succulent) {
+    return res.status(404).json({ msg: 'Succulent not found' });
+  }
+  Object.assign(succulent, req.body, { updatedAt: new Date().toISOString() });
+  res.json(succulent);
+});
 
 
 
