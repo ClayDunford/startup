@@ -2,38 +2,18 @@ import React, {useState} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import '../app.css';
 
-export function Login() {
+export function Login({onLogin}) {
   const [username, setUsername] = useState('');
   const[password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers:  {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      });
-
-      if (response.ok) {
-        const body = await response.json();
-        localStorage.setItem('userName', body.username);
-        navigate('/grow');
-      } else {
-        const error = await response.json();
-        alert(`⚠ Error: ${error.msg || 'Login failed'}`);
-      }
-    } catch (err) {
-      console.error('Network or server error', err);
-      alert('⚠ Could not connect to server.');
+    const success = onLogin(username, password);
+    if (success) {
+      navigate('/grow');
     }
-  };
-
+  }
   return (
     <div className="d-flex flex-column bg-custom min-vh-100">
       <main>
