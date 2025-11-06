@@ -1,70 +1,52 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import '../app.css';
 
-export function Login() {
+export function Login({ onLogin }) {
   const [username, setUsername] = useState('');
-  const[password, setPassword] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers:  {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      });
-
-      if (response.ok) {
-        const body = await response.json();
-        localStorage.setItem('userName', body.username);
-        navigate('/grow');
-      } else {
-        const error = await response.json();
-        alert(`⚠ Error: ${error.msg || 'Login failed'}`);
-      }
-    } catch (err) {
-      console.error('Network or server error', err);
-      alert('⚠ Could not connect to server.');
+    const success = await onLogin(username, password);  // Use onLogin prop
+    if (success) {
+      navigate('/grow');
     }
+
   };
 
   return (
     <div className="d-flex flex-column bg-custom min-vh-100">
       <main>
-        <div className="text-light text-center" style= {{ backgroundColor:'#006838' }}>
+        <div className="text-light text-center" style={{ backgroundColor: '#006838' }}>
           <h1> Log In:</h1>
         </div>
-        <div className="card mx-auto bg-dark text-light" style= {{width: "30rem"}}>
+        <div className="card mx-auto bg-dark text-light" style={{ width: "30rem" }}>
           <form className="px-4 py-3" onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="Username" className="form-label">Username</label>
-              <input type="text" 
-                className="form-control" 
-                id="Username" 
-                name="Username" 
-                placeholder="Username" 
-                value={username} 
+              <input type="text"
+                className="form-control"
+                id="Username"
+                name="Username"
+                placeholder="Username"
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                />
+              />
             </div>
             <div className="mb-3">
               <label htmlFor="Password" className="form-label">Password</label>
-              <input type="password" 
-                className="form-control" 
-                id="Password" 
-                name="Password" 
+              <input type="password"
+                className="form-control"
+                id="Password"
+                name="Password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                />
+              />
             </div>
             <div className="d-grid gap-2">
               <button type="submit" className="btn btn-success">Log In</button>
