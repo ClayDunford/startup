@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import '../app.css';
-export function Createaccount() {
+export function Createaccount( {onCreateAccount} ) {
   const[username, setUsername] = useState('');
   const[password, setPassword] = useState('');
   const[confirmPassword, setConfirmPassword] = useState('');
@@ -15,27 +15,9 @@ export function Createaccount() {
       return;
     }
 
-    try {
-      const response = await fetch('/api/auth/create', {
-        method: 'POST',
-        headers:  {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
-      });
-
-      if (response.ok) {
-        const body = await response.json();
-        localStorage.setItem('userName', body.username);
-        navigate('/grow');
-      } else {
-        const error = await response.json();
-        alert(`⚠ Error: ${error.msg || 'Could not create account'}`);
-      }
-    } catch (err) {
-      console.error('Network or server error', err);
-      alert('⚠ Could not connect to server.');
+    const success = await onCreateAccount(username, password);
+    if (success) {
+      navigate('/grow');
     }
   };
 

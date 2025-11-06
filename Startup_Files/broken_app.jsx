@@ -9,6 +9,7 @@ import { Grow } from './grow/grow';
 import { Homepage } from './homepage/homepage';
 import { Createaccount } from './createaccount/createaccount';
 import { Gallery } from './gallery/gallery';
+import { loadConfigFromFile } from 'vite';
 
 if (import.meta.env.MODE === 'development') {
     localStorage.removeItem('succulentData'); // or localStorage.clear();
@@ -18,39 +19,35 @@ export default function App() {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const stored = JSON.parse(localStorage.getItem('currentUser'));
-        if (stored) setUser(stored);
+        const storedUser = localStorage.getItem('username');
+        if (storedUser) setUser({username: storedUser});
     }, []);
 
     useEffect(() => {
-        if (user) {
-            localStorage.setItem('currentUser', JSON.stringify(user));
-        } else {
-            localStorage.removeItem('currentUser');
-        }
+        if (user?.username) localStorage.setItem('username', user.username);
+        else localStorage.removeItem('username');
+        
     }, [user]);
 
     const handleLogin = async (username, password) => {
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
             });
-
             if (response.ok) {
                 const user = await response.json();
                 setUser(user);
                 return true;
             } else {
-                alert('Invalid username or password');
+                const body = await response.json();
+                alert(body.msg || 'Login failed');
                 return false;
             }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('Failed to login');
+        } catch (err) {
+            console.error('Login error', err);
+            alert('An error occurred logging in.');
             return false;
         }
     };
@@ -59,41 +56,33 @@ export default function App() {
         try {
             const response = await fetch('/api/auth/create', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
-                credentials: 'same-origin'
             });
-
             if (response.ok) {
                 const user = await response.json();
                 setUser(user);
                 return true;
-            } else if (response.status === 409) {
-                alert('Username already exists!');
-                return false;
             } else {
-                alert('Failed to create account');
+                const body = await response.json();
+                alert(body.msg || 'Account creation failed');
                 return false;
             }
-        } catch (error) {
-            console.error('Create account error:', error);
-            alert('Failed to create account');
+        } catch (err) {
+            console.error('Create Account error', err);
+            alert('An error occurred creating your account.');
             return false;
         }
-    };
+    }
 
     const handleLogout = async () => {
-    try {
-        await fetch('/api/auth/logout', {
-            method: 'DELETE',
-        });
+        try {
+            await fetch('/api/auth/logout', { method: 'DELETE'});
+        } catch (err) {
+            console.error('Logout error', err);
+        }
         setUser(null);
-    } catch (error) {
-        console.error('Logout error:', error);
     }
-};
 
     function ProtectedRoute({ user, children }) {
         if (!user) {
