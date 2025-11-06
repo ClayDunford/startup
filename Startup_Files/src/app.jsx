@@ -18,9 +18,27 @@ export default function App() {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        const stored = JSON.parse(localStorage.getItem('currentUser'));
-        if (stored) setUser(stored);
-    }, []);
+    const item = localStorage.getItem('currentUser');
+
+    // Only try parsing if something exists
+    if (item) {
+        try {
+            const stored = JSON.parse(item);
+
+            // Ensure it’s actually an object before setting
+            if (stored && typeof stored === 'object') {
+                setUser(stored);
+            } else {
+                // Clear invalid value
+                console.warn('currentUser in localStorage is not an object, clearing.');
+                localStorage.removeItem('currentUser');
+            }
+        } catch (err) {
+            console.warn('Failed to parse currentUser from localStorage:', err);
+            localStorage.removeItem('currentUser'); // remove corrupted value
+        }
+    }
+}, []);
 
     useEffect(() => {
         if (user) {
@@ -57,33 +75,36 @@ export default function App() {
     };
 
     const handleCreateAccount = async (username, password) => {
-        try {
-            const response = await fetch('/api/auth/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-                credentials: 'include'
-            });
+    try {
+        const response = await fetch('/api/auth/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password }),
+            credentials: 'include'
+        });
 
-            if (response.ok) {
-                const user = await response.json();
-                setUser(user);
-                return true;
-            } else if (response.status === 409) {
-                alert('Username already exists!');
-                return false;
-            } else {
-                alert('Failed to create account');
-                return false;
-            }
-        } catch (error) {
-            console.error('Create account error:', error);
-            alert('Failed to create account');
+        // Get raw text instead of JSON first
+        const text = await response.text();
+        console.log('Server raw response:', text);
+
+        // Now try parsing
+        let user;
+        try {
+            user = JSON.parse(text);
+        } catch (err) {
+            console.error('Failed to parse JSON from server:', err);
             return false;
         }
-    };
+
+        setUser(user);
+        return true;
+
+    } catch (error) {
+        console.error('Create account error:', error);
+        return false;
+    }
+};
+
 
     const handleLogout = async () => {
     try {

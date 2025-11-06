@@ -19,7 +19,8 @@ app.use(cors({
     origin: ['http://localhost:5173', 'https://startup.claydunford.com'],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    exposedHeaders: ['Set-Cookie']
 }));
 
 // JSON body parsing using built-in middleware
@@ -28,39 +29,70 @@ app.use(express.json());
 // Use the cookie parser middleware for tracking authentication tokens
 app.use(cookieParser());
 
-// Serve up the front-end static content hosting
-app.use(express.static('public'));
-
 // Router for service endpoints
 var apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
+
+// Serve up the front-end static content hosting
+app.use(express.static('public'));
+
+
+
+// CreateAuth a new user
 // CreateAuth a new user
 apiRouter.post('/auth/create', async (req, res) => {
-  if (await findUser('username', req.body.username)) {
-    res.status(409).send({ msg: 'Existing user' });
-  } else {
-    const user = await createUser(req.body.username, req.body.password);
+  try {
+    if (!req.body.username || !req.body.password) {
+      return res.status(400).json({ msg: 'Username and password required' });
+    }
 
+    if (await findUser('username', req.body.username)) {
+      return res.status(409).json({ msg: 'Username already exists' });
+    }
+
+    const user = await createUser(req.body.username, req.body.password);
+    
+    // Set auth cookie and send response
     setAuthCookie(res, user.token);
-    res.send({ username: user.username });
+    res.status(201).json({ 
+      username: user.username,
+      token: user.token 
+    });
+  } catch (error) {
+    console.error('Create account error:', error);
+    res.status(500).json({ msg: 'Internal server error' });
   }
 });
 
 // GetAuth login an existing user
 apiRouter.post('/auth/login', async (req, res) => {
-  const user = await findUser('username', req.body.username);
-  if (user) {
-    if (await bcrypt.compare(req.body.password, user.password)) {
-      user.token = uuid.v4();
-      setAuthCookie(res, user.token);
-      res.send({ username: user.username });
-      return;
+  try {
+    if (!req.body.username || !req.body.password) {
+      return res.status(400).json({ msg: 'Username and password required' });
     }
-  }
-  res.status(401).send({ msg: 'Unauthorized' });
-});
 
+    const user = await findUser('username', req.body.username);
+    if (!user) {
+      return res.status(401).json({ msg: 'Invalid credentials' });
+    }
+
+    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    if (!validPassword) {
+      return res.status(401).json({ msg: 'Invalid credentials' });
+    }
+
+    user.token = uuid.v4();
+    setAuthCookie(res, user.token);
+    res.json({ 
+      username: user.username,
+      token: user.token 
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ msg: 'Internal server error' });
+  }
+});
 // DeleteAuth logout a user
 apiRouter.delete('/auth/logout', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
@@ -124,6 +156,6 @@ function setAuthCookie(res, authToken) {
   });
 }
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Listening on port ${port}`);
 });
