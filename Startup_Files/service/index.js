@@ -1,5 +1,6 @@
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
+const cors = require('cors');
 const express = require('express');
 const uuid = require('uuid');
 const app = express();
@@ -12,6 +13,14 @@ let scores = [];
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
+
+
+app.use(cors({
+    origin: ['http://localhost:5173', 'https://startup.claydunford.com'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type']
+}));
 
 // JSON body parsing using built-in middleware
 app.use(express.json());

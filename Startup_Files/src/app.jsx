@@ -38,6 +38,7 @@ export default function App() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ username, password }),
+                credentials: 'include'
             });
 
             if (response.ok) {
@@ -63,7 +64,7 @@ export default function App() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ username, password }),
-                credentials: 'same-origin'
+                credentials: 'include'
             });
 
             if (response.ok) {
@@ -88,6 +89,7 @@ export default function App() {
     try {
         await fetch('/api/auth/logout', {
             method: 'DELETE',
+            credentials: 'include' 
         });
         setUser(null);
     } catch (error) {
