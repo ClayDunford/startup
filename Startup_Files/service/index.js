@@ -4,12 +4,11 @@ const cors = require('cors');
 const express = require('express');
 const uuid = require('uuid');
 const app = express();
+const DB = require('./database.js');
 
 const authCookieName = 'token';
 
-// The scores and users are saved in memory and disappear whenever the service is restarted.
-let users = [];
-let succulents = [];
+
 
 // The service port. In production the front-end code is statically hosted by the service on the same port.
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
@@ -40,25 +39,28 @@ app.use(express.static('public'));
 
 
 // CreateAuth a new user
-// CreateAuth a new user
 apiRouter.post('/auth/create', async (req, res) => {
   try {
-    if (!req.body.username || !req.body.password) {
+    const {username, password} = req.body
+    if (!username || !password) {
       return res.status(400).json({ msg: 'Username and password required' });
     }
 
-    if (await findUser('username', req.body.username)) {
+    const existingUser = await DB.getUser(username);
+
+    if (existingUser) {
       return res.status(409).json({ msg: 'Username already exists' });
     }
 
-    const user = await createUser(req.body.username, req.body.password);
+    const passwordHash = await bcrypt.hash(password, 10);
+    const token = uuid.v4();
+
+    const newUser = {username, password: passwordHash, token};
+    await DB.addUser(newUser);
     
     // Set auth cookie and send response
-    setAuthCookie(res, user.token);
-    res.status(201).json({ 
-      username: user.username,
-      token: user.token 
-    });
+    setAuthCookie(res, token);
+    res.status(201).json({ username, token});
   } catch (error) {
     console.error('Create account error:', error);
     res.status(500).json({ msg: 'Internal server error' });
