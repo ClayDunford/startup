@@ -67,14 +67,15 @@ apiRouter.post('/auth/create', async (req, res) => {
   }
 });
 
-// GetAuth login an existing user
+// Login
 apiRouter.post('/auth/login', async (req, res) => {
   try {
-    if (!req.body.username || !req.body.password) {
+    const {username, password } = req.body;
+    if (!username || !password) {
       return res.status(400).json({ msg: 'Username and password required' });
     }
 
-    const user = await findUser('username', req.body.username);
+    const user = await DB.getUser(username);
     if (!user) {
       return res.status(401).json({ msg: 'Invalid credentials' });
     }
@@ -85,6 +86,8 @@ apiRouter.post('/auth/login', async (req, res) => {
     }
 
     user.token = uuid.v4();
+    await DB.updateUser(user);
+    
     setAuthCookie(res, user.token);
     res.json({ 
       username: user.username,
