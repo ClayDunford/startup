@@ -39,6 +39,10 @@ async function updateUser(user) {
   await userCollection.updateOne({ username: user.username }, { $set: user });
 }
 
+async function getAllUsers() {
+  return await userCollection.find({}).toArray();
+}
+
 async function getSucculent(username) {
     return succulentCollection.findOne({ owner: username });
 }
@@ -71,6 +75,7 @@ module.exports = {
   getUserByToken,
   addUser,
   updateUser,
+  getAllUsers,
   getSucculent,
   createSucculent,
   updateSucculent,

@@ -146,7 +146,7 @@ apiRouter.get('/succulents', async (req, res) => {
     res.json(succulent ? [succulent] : []);
   } catch (err) {
     console.error('Get succulent error:', err);
-    res.status(500).json({ msg: 'Internal server error'});
+    res.status(500).json({ msg: 'Internal server error' });
   }
 });
 
@@ -161,20 +161,41 @@ apiRouter.post('/succulents', async (req, res) => {
     res.status(201).json(succulent);
   } catch (err) {
     console.error('Create succulent error: ', err);
-    res.status(500).json({ msg: 'Internal server error'});
+    res.status(500).json({ msg: 'Internal server error' });
   }
 });
 
 // Update succulent by ID
 apiRouter.put('/succulents/:id', async (req, res) => {
-  const succulent = succulents.find(
-    (s) => s.id === req.params.id && s.owner === req.user.username);
-  if (!succulent) {
-    return res.status(404).json({ msg: 'Succulent not found' });
+  try {
+    const succulent = await DB.getSucculent(req.user.username);
+    if (!succulent || succulent.id !== req.params.id) {
+      return res.status(404).json({ msg: 'Succulent not found' });
+    }
+    await DB.updateSucculent(req.user.username, req.body);
+    res.json({ msg: 'Succulent updated successfully' });
+  } catch (err) {
+    console.error('Update succulent error: ', err);
+    res.status(500).json({ msg: 'Internal server error' });
   }
-  Object.assign(succulent, req.body, { updatedAt: new Date().toISOString() });
-  res.json(succulent);
 });
+
+setInterval(async () => {
+  try {
+    const allUsers = await DB.getAllUsers();
+    if (!allUsers) return;
+
+    for (const user of allUsers) {
+      const succulent = await DB.getSucculent(user.username);
+      if (succulent) {
+        await DB.updateSucculent(user.username, succulent);
+        console.log('Autosaved');
+      }
+    }
+  } catch (err) {
+    console.error('Autosave error: ', err);
+  }
+}, 5 * 60 * 1000);
 
 function setAuthCookie(res, authToken) {
   res.cookie(authCookieName, authToken, {
