@@ -2,7 +2,7 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const express = require('express');
-const uuid = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 const app = express();
 const DB = require('./database.js');
 
@@ -53,7 +53,7 @@ apiRouter.post('/auth/create', async (req, res) => {
     }
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const token = uuid.v4();
+    const token = uuidv4();
 
     const newUser = { username, password: passwordHash, token };
     await DB.addUser(newUser);
@@ -85,7 +85,7 @@ apiRouter.post('/auth/login', async (req, res) => {
       return res.status(401).json({ msg: 'Invalid credentials' });
     }
 
-    user.token = uuid.v4();
+    user.token = uuidv4();
     await DB.updateUser(user);
 
     setAuthCookie(res, user.token);
@@ -125,7 +125,13 @@ apiRouter.delete('/auth/logout', async (req, res) => {
 
 // Middleware to verify that the user is authorized to call an endpoint
 const verifyAuth = async (req, res, next) => {
-  const token = req.cookies[authCookieName];
+  // Try cookie first, then Authorization header (Bearer <token>), then query param
+  const cookieToken = req.cookies[authCookieName];
+  const authHeader = req.headers && req.headers.authorization;
+  const headerToken = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const queryToken = req.query && req.query.token;
+  const token = cookieToken || headerToken || queryToken;
+
   const user = token ? await DB.getUserByToken(token) : null;
 
   if (user) {
@@ -198,11 +204,17 @@ setInterval(async () => {
 }, 5 * 60 * 1000);
 
 function setAuthCookie(res, authToken) {
+  // In production we must use secure cookies and sameSite: 'none' for cross-site contexts (HTTPS).
+  // In development (localhost over http) use secure: false and sameSite: 'lax' so the browser will accept/send the cookie.
+  const isProduction = process.env.NODE_ENV === 'production';
+  const secure = isProduction;
+  const sameSite = isProduction ? 'none' : 'lax';
+
   res.cookie(authCookieName, authToken, {
     maxAge: 1000 * 60 * 60 * 24 * 365,
-    secure: true,
+    secure,
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite,
   });
 }
 
