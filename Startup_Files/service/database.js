@@ -1,11 +1,11 @@
 const { MongoClient } = require('mongodb');
 const config = require('./dbConfig.json');
-
+const crypto = require('crypto');
 const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostname}`;
 const client = new MongoClient(url);
 const db = client.db('startup');
 const userCollection = db.collection('users');
-// const scoreCollection = db.collection('score');
+const succulentCollection = db.collection('succulents');
 
 // This will asynchronously test the connection and exit the process if it fails
 (async function testConnection() {
@@ -34,25 +34,39 @@ async function updateUser(user) {
   await userCollection.updateOne({ username: user.username }, { $set: user });
 }
 
- // async function addScore(score) {
- //  return scoreCollection.insertOne(score);
-// }
+async function getSucculent(username) {
+    return succulentCollection.findOne({ owner: username });
+}
 
-// function getHighScores() {
-  //const query = { score: { $gt: 0, $lt: 900 } };
-  //const options = {
-    //sort: { score: -1 },
-    //limit: 10,
-  //};
-  //const cursor = scoreCollection.find(query, options);
-  //return cursor.toArray();
-//}
+async function createSucculent(owner) {
+    const newSucculent = {
+        id: crypto.randomUUID(),
+        owner,
+        size: 1,
+        water: 6,
+        potColor: '#a97c50',
+        updatedAt: new Date().toISOString(),
+    };
+    await succulentCollection.insertOne(newSucculent);
+    return newSucculent;
+}
+
+async function updateSucculent(owner, updates) {
+    const result = await succulentCollection.updateOne(
+        { owner },
+        { $set: {...updates, updatedAt: new Date().toISOString() } },
+        {upsert: true}
+    );
+    return result.value ;
+}
+
 
 module.exports = {
   getUser,
   getUserByToken,
   addUser,
   updateUser,
-  //addScore,
-  //getHighScores,
+  getSucculent,
+  createSucculent,
+  updateSucculent,
 };
