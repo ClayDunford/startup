@@ -29,7 +29,7 @@ export function Grow() {
           className="text-light text-center"
           style={{ backgroundColor: '#006838', zIndex: 5, position: 'relative' }}
         >
-          <h1>Enjoy the growth!</h1>
+          <h1>Enjoy the Growth!</h1>
           {error ? <p>{error}</p> : <p>Weather-based background active</p>}
         </div>
 

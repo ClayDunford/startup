@@ -66,7 +66,7 @@ async function updateSucculent(owner, updates) {
         { $set: {...updates, updatedAt: new Date().toISOString() } },
         {upsert: true}
     );
-    return result.value ;
+    return result;
 }
 
 

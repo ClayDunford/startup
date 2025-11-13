@@ -4,34 +4,34 @@ import { calculateGrowth } from '../utils/growthModel';
 export function useGrowthSimulation({ water, potColor, tickRate = 1000 }) {
   const [size, setSize] = useState(1);
   const [succulentId, setSucculentId] = useState(null);
-  const saveTimer = useRef(null);
+  const saveInterval = useRef(null);
 
   // Load from backend on mount
   useEffect(() => {
     async function loadSucculent() {
       try {
         const res = await fetch('/api/succulents', { credentials: 'include' });
-        if (!res.ok) return;
-
-        const succulents = await res.json();
-        if (succulents.length > 0) {
-          const s = succulents[0];
+        if (!res.ok) throw new Error('Failed to load succulent');
+        const data = await res.json();
+        
+        if (data.length > 0) {
+          const s = data[0];
+          setSize(s.size || 1);
           setSucculentId(s.id);
-          setSize(s.size);
         } else {
-          // Create one if none exists
           const createRes = await fetch('/api/succulents', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify({ size: 1, water, potColor }),
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({size: 1, water, potColor}),
           });
-          const newSucculent = await createRes.json();
-          setSucculentId(newSucculent.id);
-          setSize(newSucculent.size);
+
+          const newS = await createRes.json();
+          setSize(newS.size || 1);
+          setSucculentId(newS.id);
         }
       } catch (err) {
-        console.error('Failed to load succulent:', err);
+        console.error('Failed to load/create succulent:', err);
       }
     }
     loadSucculent();
@@ -39,29 +39,32 @@ export function useGrowthSimulation({ water, potColor, tickRate = 1000 }) {
 
   // Simulate growth
   useEffect(() => {
+    const growthTimer = setInterval(() => {
+      setSize(prev => calculateGrowth(prev, water));
+    }, tickRate);
+    return () => clearInterval(growthTimer);
+  }, [water, tickRate]);
+
+  // Autosave 
+  useEffect(() => {
     if (!succulentId) return;
 
-    const interval = setInterval(() => {
-      setSize(prev => {
-        const newSize = calculateGrowth(prev, water);
+    async function autoSave() {
+      try {
+        await fetch(`/api/succulents/${succulentId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json'},
+          credentials: 'include',
+          body: JSON.stringify({ size, water, potColor}),
+        });
+        console.log('Auto-saved succulent');
+      } catch (err) {
+        console.error('Failed to auto-save: ', err);
+      }
+    }
 
-        // Throttle saves — only update backend every few seconds
-        if (saveTimer.current) clearTimeout(saveTimer.current);
-        saveTimer.current = setTimeout(() => {
-          fetch(`/api/succulents/${succulentId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ size: newSize, water, potColor }),
-          }).catch(err => console.error('Failed to save succulent:', err));
-        }, 2000);
-
-        return newSize;
-      });
-    }, tickRate);
-
-    return () => clearInterval(interval);
-  }, [succulentId, water, potColor, tickRate]);
-
+    saveInterval.current = setInterval(autoSave, 5 * 60 * 1000);
+    return () => clearInterval(saveInterval.current);
+  }, [succulentId, size, water, potColor]);
   return size;
 }
