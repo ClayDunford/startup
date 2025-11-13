@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Router for service endpoints
-var apiRouter = express.Router();
+const apiRouter = express.Router();
 app.use(`/api`, apiRouter);
 
 
@@ -80,14 +80,14 @@ apiRouter.post('/auth/login', async (req, res) => {
       return res.status(401).json({ msg: 'Invalid credentials' });
     }
 
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
+    const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return res.status(401).json({ msg: 'Invalid credentials' });
     }
 
     user.token = uuid.v4();
     await DB.updateUser(user);
-    
+
     setAuthCookie(res, user.token);
     res.json({ 
       username: user.username,
@@ -100,42 +100,55 @@ apiRouter.post('/auth/login', async (req, res) => {
 });
 // DeleteAuth logout a user
 apiRouter.delete('/auth/logout', async (req, res) => {
-  const user = await findUser('token', req.cookies[authCookieName]);
-  if (user) {
-    delete user.token;
+  
+  try {
+    const token = req.cookies[authCookieName];
+    if (token) {
+      const user = await DB.getUserByToken(token);
+      if (user) {
+        delete user.token
+        await DB.updateUser(user);
+      }
+    }
+    res.clearCookie(authCookieName);
+    res.status(204).end();
+  } catch (err) {
+    console.error('Logout Error: ', err);
+    res.status(500).json({msg:'Internal server error'});
   }
-  res.clearCookie(authCookieName);
-  res.status(204).end();
 });
 
 // Middleware to verify that the user is authorized to call an endpoint
 const verifyAuth = async (req, res, next) => {
-  const user = await findUser('token', req.cookies[authCookieName]);
+  const token = req.cookies[authCookieName];
+  const user = token ? await DB.getUserByToken(token) : null;
+
   if (user) {
+    req.user = user;
     next();
   } else {
-    res.status(401).send({ msg: 'Unauthorized' });
+    res.status(401).send({ msg: "Unauthorized"});
   }
 };
 
 // Require authentication for succulent endpoints
 apiRouter.use('/succulents', verifyAuth);
 
+const succulents = [];
+
 // Get all succulents for current user
 apiRouter.get('/succulents', async (req, res) => {
-  const user = await findUser('token', req.cookies[authCookieName]);
-  const userSucculents = succulents.filter(s => s.owner === user.username);
+  const userSucculents = succulents.filter((s) => s.owner === req.user.username);
   res.json(userSucculents);
 });
 
 // Create a new succulent
 apiRouter.post('/succulents', async (req, res) => {
-  const user = await findUser('token', req.cookies[authCookieName]);
   const { size = 1, water = 6, potColor = '#a97c50' } = req.body;
 
   const newSucculent = {
     id: uuid.v4(),
-    owner: user.username,
+    owner: req.user.username,
     size,
     water,
     potColor,
@@ -147,8 +160,8 @@ apiRouter.post('/succulents', async (req, res) => {
 
 // Update succulent by ID
 apiRouter.put('/succulents/:id', async (req, res) => {
-  const user = await findUser('token', req.cookies[authCookieName]);
-  const succulent = succulents.find(s => s.id === req.params.id && s.owner === user.username);
+  const succulent = succulents.find(
+    (s) => s.id === req.params.id && s.owner === req.user.username);
   if (!succulent) {
     return res.status(404).json({ msg: 'Succulent not found' });
   }
@@ -156,10 +169,18 @@ apiRouter.put('/succulents/:id', async (req, res) => {
   res.json(succulent);
 });
 
-
+function setAuthCookie(res, authToken) {
+  res.cookie(authCookieName, authToken, {
+    maxAge: 1000 * 60 * 60 * 24 * 365,
+    secure: true,
+    httpOnly: true,
+    sameSite: 'strict',
+  });
+}
 
 // Default error handler
 app.use(function (err, req, res, next) {
+  console.error('Unhandled error: ', err);
   res.status(500).send({ type: err.name, message: err.message });
 });
 
@@ -169,35 +190,6 @@ app.use((_req, res) => {
 });
 
 
-
-async function createUser(username, password) {
-  const passwordHash = await bcrypt.hash(password, 10);
-
-  const user = {
-    username: username,
-    password: passwordHash,
-    token: uuid.v4(),
-  };
-  users.push(user);
-
-  return user;
-}
-
-async function findUser(field, value) {
-  if (!value) return null;
-
-  return users.find((u) => u[field] === value);
-}
-
-// setAuthCookie in the HTTP response
-function setAuthCookie(res, authToken) {
-  res.cookie(authCookieName, authToken, {
-    maxAge: 1000 * 60 * 60 * 24 * 365,
-    secure: true,
-    httpOnly: true,
-    sameSite: 'strict',
-  });
-}
 
 app.listen(port, '0.0.0.0', () => {
   console.log(`Listening on port ${port}`);
