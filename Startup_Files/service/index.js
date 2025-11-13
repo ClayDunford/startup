@@ -15,11 +15,11 @@ const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
 
 app.use(cors({
-    origin: ['http://localhost:5173', 'https://startup.claydunford.com'],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
-    exposedHeaders: ['Set-Cookie']
+  origin: ['http://localhost:5173', 'https://startup.claydunford.com'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  exposedHeaders: ['Set-Cookie']
 }));
 
 // JSON body parsing using built-in middleware
@@ -41,7 +41,7 @@ app.use(express.static('public'));
 // CreateAuth a new user
 apiRouter.post('/auth/create', async (req, res) => {
   try {
-    const {username, password} = req.body
+    const { username, password } = req.body
     if (!username || !password) {
       return res.status(400).json({ msg: 'Username and password required' });
     }
@@ -55,12 +55,12 @@ apiRouter.post('/auth/create', async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
     const token = uuid.v4();
 
-    const newUser = {username, password: passwordHash, token};
+    const newUser = { username, password: passwordHash, token };
     await DB.addUser(newUser);
-    
+
     // Set auth cookie and send response
     setAuthCookie(res, token);
-    res.status(201).json({ username, token});
+    res.status(201).json({ username, token });
   } catch (error) {
     console.error('Create account error:', error);
     res.status(500).json({ msg: 'Internal server error' });
@@ -70,7 +70,7 @@ apiRouter.post('/auth/create', async (req, res) => {
 // Login
 apiRouter.post('/auth/login', async (req, res) => {
   try {
-    const {username, password } = req.body;
+    const { username, password } = req.body;
     if (!username || !password) {
       return res.status(400).json({ msg: 'Username and password required' });
     }
@@ -89,9 +89,9 @@ apiRouter.post('/auth/login', async (req, res) => {
     await DB.updateUser(user);
 
     setAuthCookie(res, user.token);
-    res.json({ 
+    res.json({
       username: user.username,
-      token: user.token 
+      token: user.token
     });
   } catch (error) {
     console.error('Login error:', error);
@@ -100,12 +100,17 @@ apiRouter.post('/auth/login', async (req, res) => {
 });
 // DeleteAuth logout a user
 apiRouter.delete('/auth/logout', async (req, res) => {
-  
+
   try {
     const token = req.cookies[authCookieName];
     if (token) {
       const user = await DB.getUserByToken(token);
       if (user) {
+        const succulent = await DB.getSucculent(user.username);
+        if (succulent) {
+          await DB.updateSucculent(user.username, succulent);
+          console.log('Autosaved Succulent')
+        }
         delete user.token
         await DB.updateUser(user);
       }
@@ -114,7 +119,7 @@ apiRouter.delete('/auth/logout', async (req, res) => {
     res.status(204).end();
   } catch (err) {
     console.error('Logout Error: ', err);
-    res.status(500).json({msg:'Internal server error'});
+    res.status(500).json({ msg: 'Internal server error' });
   }
 });
 
@@ -127,35 +132,37 @@ const verifyAuth = async (req, res, next) => {
     req.user = user;
     next();
   } else {
-    res.status(401).send({ msg: "Unauthorized"});
+    res.status(401).send({ msg: "Unauthorized" });
   }
 };
 
 // Require authentication for succulent endpoints
 apiRouter.use('/succulents', verifyAuth);
 
-const succulents = [];
-
 // Get all succulents for current user
 apiRouter.get('/succulents', async (req, res) => {
-  const userSucculents = succulents.filter((s) => s.owner === req.user.username);
-  res.json(userSucculents);
+  try {
+    const succulent = await DB.getSucculent(req.user.username);
+    res.json(succulent ? [succulent] : []);
+  } catch (err) {
+    console.error('Get succulent error:', err);
+    res.status(500).json({ msg: 'Internal server error'});
+  }
 });
 
 // Create a new succulent
 apiRouter.post('/succulents', async (req, res) => {
-  const { size = 1, water = 6, potColor = '#a97c50' } = req.body;
-
-  const newSucculent = {
-    id: uuid.v4(),
-    owner: req.user.username,
-    size,
-    water,
-    potColor,
-    updatedAt: new Date().toISOString(),
-  };
-  succulents.push(newSucculent);
-  res.status(201).json(newSucculent);
+  try {
+    let succulent = await DB.getSucculent(req.user.username);
+    if (!succulent) {
+      succulent = await DB.createSucculent(req.user.username);
+      console.log('Created new succulent');
+    }
+    res.status(201).json(succulent);
+  } catch (err) {
+    console.error('Create succulent error: ', err);
+    res.status(500).json({ msg: 'Internal server error'});
+  }
 });
 
 // Update succulent by ID

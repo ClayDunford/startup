@@ -7,6 +7,11 @@ const db = client.db('startup');
 const userCollection = db.collection('users');
 const succulentCollection = db.collection('succulents');
 
+
+succulentCollection.createIndex({ owner: 1}, {unique: true })
+    .then(() => console.log('Unique index confirmed'))
+    .catch(err => console.error('Failed to create unique index:', err));
+    
 // This will asynchronously test the connection and exit the process if it fails
 (async function testConnection() {
   try {
