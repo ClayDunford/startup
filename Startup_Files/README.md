@@ -1,9 +1,8 @@
-# Class Connections
+# Simply Succulents
 
 [My Notes](notes.md)
 
-A tool to show the dependencies between various classes when planning multiple semesters out and displays the flow between classes like a flowchart. 
-
+Simulates succulents.
 
 > [!NOTE]
 >  This is a template for your startup application. You must modify this `README.md` file for each phase of your development. You only need to fill in the section for each deliverable when that deliverable is submitted in Canvas. Without completing the section for a deliverable, the TA will not know what to look for when grading your submission. Feel free to add additional information to each deliverable description, but make sure you at least have the list of rubric items and a description of what you did for each item.
