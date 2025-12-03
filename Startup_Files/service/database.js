@@ -8,10 +8,10 @@ const userCollection = db.collection('users');
 const succulentCollection = db.collection('succulents');
 
 
-succulentCollection.createIndex({ owner: 1}, {unique: true })
-    .then(() => console.log('Unique index confirmed'))
-    .catch(err => console.error('Failed to create unique index:', err));
-    
+succulentCollection.createIndex({ owner: 1 }, { unique: true })
+  .then(() => console.log('Unique index confirmed'))
+  .catch(err => console.error('Failed to create unique index:', err));
+
 // This will asynchronously test the connection and exit the process if it fails
 (async function testConnection() {
   try {
@@ -44,29 +44,33 @@ async function getAllUsers() {
 }
 
 async function getSucculent(username) {
-    return succulentCollection.findOne({ owner: username });
+  return succulentCollection.findOne({ owner: username });
 }
 
 async function createSucculent(owner) {
-    const newSucculent = {
-        id: crypto.randomUUID(),
-        owner,
-        size: 1,
-        water: 6,
-        potColor: '#a97c50',
-        updatedAt: new Date().toISOString(),
-    };
-    await succulentCollection.insertOne(newSucculent);
-    return newSucculent;
+  const newSucculent = {
+    id: crypto.randomUUID(),
+    owner,
+    size: 1,
+    water: 6,
+    potColor: '#a97c50',
+    updatedAt: new Date().toISOString(),
+  };
+  await succulentCollection.insertOne(newSucculent);
+  return newSucculent;
 }
 
 async function updateSucculent(owner, updates) {
-    const result = await succulentCollection.updateOne(
-        { owner },
-        { $set: {...updates, updatedAt: new Date().toISOString() } },
-        {upsert: true}
-    );
-    return result;
+  const result = await succulentCollection.updateOne(
+    { owner },
+    { $set: { ...updates, updatedAt: new Date().toISOString() } },
+    { upsert: true }
+  );
+  return result;
+}
+
+async function getAllSucculents() {
+  return await succulentCollection.find({}).toArray();
 }
 
 
@@ -79,4 +83,5 @@ module.exports = {
   getSucculent,
   createSucculent,
   updateSucculent,
+  getAllSucculents,
 };
