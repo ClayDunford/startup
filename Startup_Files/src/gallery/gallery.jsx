@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGalleryWebSocket } from './useGalleryWebSocket';
+import { SucculentMini } from './SucculentMini';
 import '../app.css';
 
 export function Gallery() {
@@ -15,7 +16,7 @@ export function Gallery() {
           {succulents.length === 0 ? (<p className="text-light"> No succulents in the gallery yet. Start growing yours!</p>) :
             (succulents.map((s, i) => (
               <div key={s.id || i} className="card bg-dark text-light" style={{ width: "18rem" }}>
-                <img className="card-img-top" src="/WindowTest.svg" alt="Succulent" />
+                <SucculentMini size={s.savedSize} potColor={s.savedPotColor} />
                 <div className="card-body">
                   <h5 className="card-title">{s.username}'s Succulent</h5>
                   <p className="card-text mb-1">Size: {s.savedSize}</p>
