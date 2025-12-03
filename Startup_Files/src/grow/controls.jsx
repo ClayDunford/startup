@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Controls({ potColor, setPotColor, water, setWater }) {
+export default function Controls({ potColor, setPotColor, water, setWater, saveSucculent }) {
     return (
         <div className='mt-4 text-light text-center'>
             <div>
@@ -14,14 +14,24 @@ export default function Controls({ potColor, setPotColor, water, setWater }) {
             </div>
             <div className="mt-3">
                 <label>Water: {water}</label>
-                <input 
+                <input
                     type="range"
                     min="0"
                     max="10"
                     value={water}
                     onChange={(e) => setWater(Number(e.target.value))}
-                    />
+                />
             </div>
+            {saveSucculent && (
+                <div className="mt-3">
+                    <button
+                        className="btn btn-success btn-sm"
+                        onClick={saveSucculent}
+                    >
+                        💾 Save Now
+                    </button>
+                </div>
+            )}
         </div>
     )
 }

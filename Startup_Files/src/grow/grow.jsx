@@ -1,28 +1,28 @@
-import React, { useState } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import '../app.css';
 import Succulent from './succulent';
 import Controls from './controls';
-import { useGrowthSimulation } from './hooks/useGrowthSimulation';
 import { useWeather } from './hooks/useWeather';
 import { getWeatherBackground } from './utils/weatherBackground';
+import { useSucculent } from '../context/SucculentContext';
 
 export function Grow() {
-  const [potColor, setPotColor] = useState('#a97c50');
-  const [water, setWater] = useState(6);
-
-  const size = useGrowthSimulation({ water, potColor, tickRate: 1000 });
+  const { size, water, setWater, potColor, setPotColor, saveSucculent } = useSucculent();
   const { weather, error } = useWeather();
-  const background = getWeatherBackground(weather?.weathercode);
+
+
+
+  // Compute background only when weathercode actually changes (not on every render)
+  const background = useMemo(() => {
+    return weather?.weathercode != null
+      ? getWeatherBackground(weather.weathercode)
+      : '#006838';
+  }, [weather?.weathercode]);
 
   return (
     <div
       className="d-flex flex-column bg-custom min-vh-100"
-      style={{
-        background: background || '#006838',
-        transition: 'background 1s ease',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      style={{ background: background, position: 'relative', overflow: 'hidden' }}
     >
       <main style={{ position: 'relative', flexGrow: 1 }}>
         <div
@@ -30,7 +30,7 @@ export function Grow() {
           style={{ backgroundColor: '#006838', zIndex: 5, position: 'relative' }}
         >
           <h1>Enjoy the Growth!</h1>
-          {error ? <p>{error}</p> : <p>Weather-based background active</p>}
+          {error ? <p>{error}</p> : <p>Weather‑based background active</p>}
         </div>
 
         <div
@@ -45,25 +45,31 @@ export function Grow() {
             justifyContent: 'center',
           }}
         >
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', zIndex: 2, width: '100%' }}>
             <div
               className="d-flex flex-column align-items-center mt-4"
               style={{
                 zIndex: 2,
                 position: 'relative',
                 minHeight: '80vh',
-                paddingBottom: '15vh',
+                paddingBottom: '0vh',
                 justifyContent: 'flex-end',
+                width: '100%',
               }}
             >
-              <Succulent size={size} potColor={potColor} />
+              <div style={{ width: '20%', minWidth: '120px', marginTop: '10vh' }}>
+                <Succulent size={size} potColor={potColor} />
+              </div>
               <Controls
                 potColor={potColor}
                 setPotColor={setPotColor}
                 water={water}
                 setWater={setWater}
+                saveSucculent={saveSucculent}
               />
-              <p className="text-light mt-3">Current Size: {size.toFixed(2)}x</p>
+              <p className="text-light mt-3">
+                Current Size: {size.toFixed(2)}x
+              </p>
             </div>
           </div>
         </div>

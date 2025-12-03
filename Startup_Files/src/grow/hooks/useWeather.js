@@ -1,21 +1,21 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 
 export function useWeather() {
     const [weather, setWeather] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if(!navigator.geolocation) {
+        if (!navigator.geolocation) {
             setError("Geolocation not supported");
             return;
         }
 
         navigator.geolocation.getCurrentPosition(
             async (pos) => {
-                const {latitude, longitude} = pos.coords;
+                const { latitude, longitude } = pos.coords;
                 try {
                     const res = await fetch(
-                       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weathercode`
+                        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weathercode`
                     );
                     const data = await res.json();
                     setWeather(data.current);
@@ -26,5 +26,5 @@ export function useWeather() {
             () => setError("Location access denied")
         );
     }, []);
-    return {weather, error};
+    return { weather, error };
 }

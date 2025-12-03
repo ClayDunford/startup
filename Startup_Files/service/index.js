@@ -106,11 +106,11 @@ apiRouter.delete('/auth/logout', async (req, res) => {
     if (token) {
       const user = await DB.getUserByToken(token);
       if (user) {
-        const succulent = await DB.getSucculent(user.username);
-        if (succulent) {
-          await DB.updateSucculent(user.username, succulent);
-          console.log('Autosaved Succulent')
-        }
+        //const succulent = await DB.getSucculent(user.username);
+        //if (succulent) {
+        //  await DB.updateSucculent(user.username, succulent);
+        //  console.log('Autosaved Succulent')
+        //}
         delete user.token
         await DB.updateUser(user);
       }
@@ -174,34 +174,46 @@ apiRouter.post('/succulents', async (req, res) => {
 // Update succulent by ID
 apiRouter.put('/succulents/:id', async (req, res) => {
   try {
+    console.log('📝 PUT /succulents/:id - Request:', {
+      id: req.params.id,
+      username: req.user.username,
+      body: req.body
+    });
+
     const succulent = await DB.getSucculent(req.user.username);
+    console.log('🔍 Found succulent:', succulent);
+
     if (!succulent || succulent.id !== req.params.id) {
+      console.log('❌ Succulent not found or ID mismatch');
       return res.status(404).json({ msg: 'Succulent not found' });
     }
-    await DB.updateSucculent(req.user.username, req.body);
+
+    const updateResult = await DB.updateSucculent(req.user.username, req.body);
+    console.log('✅ Update result:', updateResult);
+
     res.json({ msg: 'Succulent updated successfully' });
   } catch (err) {
-    console.error('Update succulent error: ', err);
+    console.error('❌ Update succulent error: ', err);
     res.status(500).json({ msg: 'Internal server error' });
   }
 });
 
-setInterval(async () => {
-  try {
-    const allUsers = await DB.getAllUsers();
-    if (!allUsers) return;
+//setInterval(async () => {
+//  try {
+//    const allUsers = await DB.getAllUsers();
+//    if (!allUsers) return;
 
-    for (const user of allUsers) {
-      const succulent = await DB.getSucculent(user.username);
-      if (succulent) {
-        await DB.updateSucculent(user.username, succulent);
-        console.log('Autosaved');
-      }
-    }
-  } catch (err) {
-    console.error('Autosave error: ', err);
-  }
-}, 5 * 60 * 1000);
+//    for (const user of allUsers) {
+//      const succulent = await DB.getSucculent(user.username);
+//      if (succulent) {
+//        await DB.updateSucculent(user.username, succulent);
+//        console.log('Autosaved');
+//      }
+//    }
+//  } catch (err) {
+//    console.error('Autosave error: ', err);
+//  }
+//}, 5 * 60 * 1000);
 
 function setAuthCookie(res, authToken) {
   // In production we must use secure cookies and sameSite: 'none' for cross-site contexts (HTTPS).

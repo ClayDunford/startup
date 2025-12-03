@@ -9,6 +9,7 @@ import { Grow } from './grow/grow';
 import { Homepage } from './homepage/homepage';
 import { Createaccount } from './createaccount/createaccount';
 import { Gallery } from './gallery/gallery';
+import { useSucculent } from './context/SucculentContext';
 
 if (import.meta.env.MODE === 'development') {
     localStorage.removeItem('succulentData'); // or localStorage.clear();
@@ -16,29 +17,30 @@ if (import.meta.env.MODE === 'development') {
 
 export default function App() {
     const [user, setUser] = useState(null);
+    const { saveSucculent } = useSucculent();
 
     useEffect(() => {
-    const item = localStorage.getItem('currentUser');
+        const item = localStorage.getItem('currentUser');
 
-    // Only try parsing if something exists
-    if (item) {
-        try {
-            const stored = JSON.parse(item);
+        // Only try parsing if something exists
+        if (item) {
+            try {
+                const stored = JSON.parse(item);
 
-            // Ensure it’s actually an object before setting
-            if (stored && typeof stored === 'object') {
-                setUser(stored);
-            } else {
-                // Clear invalid value
-                console.warn('currentUser in localStorage is not an object, clearing.');
-                localStorage.removeItem('currentUser');
+                // Ensure it’s actually an object before setting
+                if (stored && typeof stored === 'object') {
+                    setUser(stored);
+                } else {
+                    // Clear invalid value
+                    console.warn('currentUser in localStorage is not an object, clearing.');
+                    localStorage.removeItem('currentUser');
+                }
+            } catch (err) {
+                console.warn('Failed to parse currentUser from localStorage:', err);
+                localStorage.removeItem('currentUser'); // remove corrupted value
             }
-        } catch (err) {
-            console.warn('Failed to parse currentUser from localStorage:', err);
-            localStorage.removeItem('currentUser'); // remove corrupted value
         }
-    }
-}, []);
+    }, []);
 
     useEffect(() => {
         if (user) {
@@ -75,56 +77,51 @@ export default function App() {
     };
 
     const handleCreateAccount = async (username, password) => {
-    try {
-        const response = await fetch('/api/auth/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }),
-            credentials: 'include'
-        });
-
-        // Get raw text instead of JSON first
-        const text = await response.text();
-        console.log('Server raw response:', text);
-
-        // Now try parsing
-        let user;
         try {
-            user = JSON.parse(text);
-        } catch (err) {
-            console.error('Failed to parse JSON from server:', err);
+            const response = await fetch('/api/auth/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+                credentials: 'include'
+            });
+
+            // Get raw text instead of JSON first
+            const text = await response.text();
+            console.log('Server raw response:', text);
+
+            // Now try parsing
+            let user;
+            try {
+                user = JSON.parse(text);
+            } catch (err) {
+                console.error('Failed to parse JSON from server:', err);
+                return false;
+            }
+
+            setUser(user);
+            return true;
+
+        } catch (error) {
+            console.error('Create account error:', error);
             return false;
         }
-
-        setUser(user);
-        return true;
-
-    } catch (error) {
-        console.error('Create account error:', error);
-        return false;
-    }
-};
+    };
 
 
     const handleLogout = async () => {
-    try {
-        await fetch('/api/auth/logout', {
-            method: 'DELETE',
-            credentials: 'include' 
-        });
-        setUser(null);
-    } catch (error) {
-        console.error('Logout error:', error);
-    }
-};
-
-    function ProtectedRoute({ user, children }) {
-        if (!user) {
-            alert("You must be logged in to access this page.");
-            return <Navigate to="/login" replace />;
+        await saveSucculent();
+        try {
+            await fetch('/api/auth/logout', {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+            setUser(null);
+        } catch (error) {
+            console.error('Logout error:', error);
         }
-        return children;
-    }
+    };
+
+
 
     return (
         <BrowserRouter>
@@ -189,6 +186,14 @@ export default function App() {
             </div>
         </BrowserRouter>
     );
+}
+
+function ProtectedRoute({ user, children }) {
+    if (!user) {
+        alert("You must be logged in to access this page.");
+        return <Navigate to="/login" replace />;
+    }
+    return children;
 }
 
 function NotFound() {

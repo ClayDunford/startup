@@ -5,17 +5,33 @@ export default function Succulent({ size, potColor }) {
         <div
             style={{
                 position: 'relative',
-                width: 120,
+                width: '100%',
+                aspectRatio: '1/1',
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'flex-start',
+                alignItems: 'center',
             }}
         >
+            {/* Shadow */}
+            <div
+                style={{
+                    position: 'absolute',
+                    bottom: '-10%',
+                    width: '66%',
+                    height: '10%',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                    filter: 'blur(4px)',
+                    zIndex: 0,
+                    transform: `scale(${size})`,
+                    transition: 'transform 1s ease',
+                }}
+            />
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 792 432"
-                width={120}
-                height={120}
+                width="100%"
+                height="100%"
                 style={{
                     zIndex: 2,
                 }}
@@ -37,16 +53,17 @@ export default function Succulent({ size, potColor }) {
             </svg>
             <img src="/Succulentplant.svg"
                 alt="Succulent"
-                style={{ 
-                    width: '80',
+                style={{
+                    width: '66%',
                     height: 'auto',
-                    transform: `scale(${size})`,
-                    transition: 'transform 1s ease', 
-                    transformOrigin: 'bottom center',
+                    transform: `translateX(-50%) scale(${size})`,
+                    transition: 'transform 1s ease',
+                    transformOrigin: '50% 93%',
                     position: 'absolute',
-                    bottom: 60,
+                    left: '50%',
+                    bottom: '50%',
                     zIndex: 1,
-                    }} />
+                }} />
 
         </div>
     )
