@@ -5,6 +5,7 @@ const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 const app = express();
 const DB = require('./database.js');
+const WebSocket = require('ws');
 
 const authCookieName = 'token';
 
@@ -198,6 +199,24 @@ apiRouter.put('/succulents/:id', async (req, res) => {
   }
 });
 
+apiRouter.get('gallery/succulents', async (req, res) => {
+  try {
+    const succulents = await DB.getAllSucculents();
+    const galleryData = succulents.map(s => ({
+      username: s.owner,
+      savedSize: s.size,
+      savedWater: s.water,
+      savedPotColor: s.potColor,
+      savedDate: s.updatedAt,
+      idL: s.id
+
+    }));
+    res.json(galleryData);
+  } catch (err) {
+    console.error('Get all succulents error: ', err);
+    res.status(500).json({ msg: 'Internal server error' });
+  }
+})
 //setInterval(async () => {
 //  try {
 //    const allUsers = await DB.getAllUsers();
@@ -243,6 +262,18 @@ app.use((_req, res) => {
 
 
 
-app.listen(port, '0.0.0.0', () => {
+const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Listening on port ${port}`);
 });
+
+const wss = new WebSocketServer({ noServer: true });
+
+const clients = new Set();
+
+server.on('upgrade', (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, ws => {
+    wss.emit('connection', ws, request);
+  });
+});
+
+
