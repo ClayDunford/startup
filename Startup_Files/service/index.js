@@ -210,7 +210,7 @@ apiRouter.put('/succulents/:id', async (req, res) => {
   }
 });
 
-apiRouter.get('gallery/succulents', async (req, res) => {
+apiRouter.get('/gallery/succulents', async (req, res) => {
   try {
     const succulents = await DB.getAllSucculents();
     const galleryData = succulents.map(s => ({
@@ -219,15 +219,14 @@ apiRouter.get('gallery/succulents', async (req, res) => {
       savedWater: s.water,
       savedPotColor: s.potColor,
       savedDate: s.updatedAt,
-      idL: s.id
-
+      id: s.id
     }));
     res.json(galleryData);
   } catch (err) {
     console.error('Get all succulents error: ', err);
     res.status(500).json({ msg: 'Internal server error' });
   }
-})
+});
 //setInterval(async () => {
 //  try {
 //    const allUsers = await DB.getAllUsers();
@@ -277,7 +276,7 @@ const server = app.listen(port, '0.0.0.0', () => {
   console.log(`Listening on port ${port}`);
 });
 
-const wss = new WebSocketServer({ noServer: true });
+const wss = new WebSocket.Server({ noServer: true });
 
 const clients = new Set();
 

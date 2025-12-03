@@ -6,7 +6,7 @@ export function Gallery() {
   const succulents = useGalleryWebSocket();
 
   return (
-    <div className="d-flex flex-column bg-custom min-vh-199">
+    <div className="d-flex flex-column bg-custom min-vh-100">
       <main>
         <div className="text-light text-center" style={{ backgroundColor: "#006838" }}>
           <h1>Global Succulent Gallery (Live Updates)</h1>
@@ -18,9 +18,9 @@ export function Gallery() {
                 <img className="card-img-top" src="/WindowTest.svg" alt="Succulent" />
                 <div className="card-body">
                   <h5 className="card-title">{s.username}'s Succulent</h5>
-                  <p className="card-text mb-1">Size: {s.size}</p>
-                  <p className="card-text mb-1">Water: {s.water}</p>
-                  <p className="card-text mb-1">Pot Color: {s.potColor}</p>
+                  <p className="card-text mb-1">Size: {s.savedSize}</p>
+                  <p className="card-text mb-1">Water: {s.savedWater}</p>
+                  <p className="card-text mb-1">Pot Color: {s.savedPotColor}</p>
                   <p className="card-text small text-muted">Last Updated: {new Date(s.savedDate).toLocaleString()}</p>
                 </div>
               </div>

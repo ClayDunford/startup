@@ -19,31 +19,34 @@ export function useGalleryWebSocket() {
         fetchInitialData();
 
         const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-        const wsUrl = `${protocol}://${window.location.host}/api/gallery/ws`;
+        const wsUrl = `${protocol}://${window.location.host}`;
 
         ws.current = new WebSocket(wsUrl);
 
         ws.current.onopen = () => {
             console.log('WebSocket connected to gallery');
-        }
+        };
 
         ws.current.onmessage = (event) => {
             try {
                 const message = JSON.parse(event.data);
 
-                if (message.typ === 'SUCCULENT_UPDATE') {
+                if (message.type === 'SUCCULENT_UPDATE') {
                     setSucculents((prev) => {
                         const index = prev.findIndex(s => s.username === message.data.username);
                         if (index >= 0) {
-                            const updated = [...prev, message.data];
+                            const updated = [...prev];
+                            updated[index] = message.data;
+                            return updated;
+                        } else {
+                            return [...prev, message.data];
                         }
                     });
                 }
             } catch (err) {
                 console.error('Failed to parse Websocket message', err);
-            };
+            }
         };
-
 
         ws.current.onclose = () => {
             console.log('Websocket disconnected');
