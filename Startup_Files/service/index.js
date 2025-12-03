@@ -276,4 +276,32 @@ server.on('upgrade', (request, socket, head) => {
   });
 });
 
+wss.on('connection', ws => {
+  console.log('New Websocket connection');
+  clients.add(ws);
 
+  ws.on('close', () => {
+    console.log('Websocket connection closed');
+    clients.delete(ws);
+  });
+
+  ws.on('error', (error) => {
+    console.error('Websocket error: ', error);
+    clients.delete(ws);
+  });
+});
+
+function broadcastSucculentUpdate(succulentData) {
+  const message = JSON.stringify({
+    type: 'SUCCULENT_UPDATE',
+    data: succulentData
+  });
+
+  clients.forEach(client => {
+    if (client.readyState === 1) {
+      client.send(message);
+    }
+  });
+}
+
+global.broadcastSucculentUpdate = broadcastSucculentUpdate;
