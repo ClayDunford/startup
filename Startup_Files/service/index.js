@@ -192,6 +192,17 @@ apiRouter.put('/succulents/:id', async (req, res) => {
     const updateResult = await DB.updateSucculent(req.user.username, req.body);
     console.log('✅ Update result:', updateResult);
 
+    if (global.broadcastSucculentUpdate) {
+      global.broadcastSucculentUpdate({
+        username: req.user.username,
+        savedSize: req.body.size,
+        savedWater: req.body.water,
+        savedPotColor: req.body.potColor,
+        savedDate: new Date().toISOString(),
+        id: req.params.id
+      });
+    }
+
     res.json({ msg: 'Succulent updated successfully' });
   } catch (err) {
     console.error('❌ Update succulent error: ', err);
